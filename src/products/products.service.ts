@@ -67,4 +67,26 @@ export class ProductsService {
       results: results,
     };
   }
+
+  async getProductById(id: number): Promise<any> {
+    const product = await this.productsRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.mainProduct', 'mainProduct')
+      .where('product.id = :id', { id })
+      .getOne();
+
+    if (!product) {
+      return null;
+    }
+
+    return {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      promotion: product.promotion,
+      store: product.store,
+      eventDate: product.eventDate,
+      imageUrl: product.mainProduct?.imageUrl || null,
+    };
+  }
 }
