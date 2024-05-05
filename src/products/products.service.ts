@@ -4,6 +4,8 @@ import { Product } from './entities/product.entity';
 import { Between, Repository } from 'typeorm';
 import { GetProductsDto } from './dto/get-product.dto';
 import { Paginated } from 'src/common/pagination/pagination';
+import type { Promotion } from './enums/promotion.enum';
+import type { Store } from './enums/store.enum';
 
 @Injectable()
 export class ProductsService {
@@ -33,11 +35,13 @@ export class ProductsService {
       eventDate.getMonth(),
       1,
     );
+
     const endDate = new Date(
       eventDate.getFullYear(),
       eventDate.getMonth() + 1,
       0,
     );
+
     queryBuilder.andWhere({
       eventDate: Between(startDate, endDate),
     });
@@ -88,5 +92,32 @@ export class ProductsService {
       eventDate: product.eventDate,
       imageUrl: product.mainProduct?.imageUrl || null,
     };
+  }
+
+  async getProductsCount(
+    store: Store,
+    promotion: Promotion,
+    date: Date,
+  ): Promise<number> {
+    const eventDate = new Date(date);
+    const startDate = new Date(
+      eventDate.getFullYear(),
+      eventDate.getMonth(),
+      1,
+    );
+
+    const endDate = new Date(
+      eventDate.getFullYear(),
+      eventDate.getMonth() + 1,
+      0,
+    );
+    const count = await this.productsRepository
+      .createQueryBuilder('product')
+      .where('product.store = :store', { store })
+      .andWhere('product.promotion = :promotion', { promotion })
+      .andWhere({ eventDate: Between(startDate, endDate) })
+      .getCount();
+    console.log(count);
+    return count;
   }
 }
