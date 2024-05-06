@@ -94,33 +94,6 @@ export class ProductsService {
     };
   }
 
-  async getProductsCount(
-    store: Store,
-    promotion: Promotion,
-    date: Date,
-  ): Promise<number> {
-    const eventDate = new Date(date);
-    const startDate = new Date(
-      eventDate.getFullYear(),
-      eventDate.getMonth(),
-      1,
-    );
-
-    const endDate = new Date(
-      eventDate.getFullYear(),
-      eventDate.getMonth() + 1,
-      0,
-    );
-    const count = await this.productsRepository
-      .createQueryBuilder('product')
-      .where('product.store = :store', { store })
-      .andWhere('product.promotion = :promotion', { promotion })
-      .andWhere({ eventDate: Between(startDate, endDate) })
-      .getCount();
-    console.log(count);
-    return count;
-  }
-
   async searchProducts(
     productName: string,
     date: string,

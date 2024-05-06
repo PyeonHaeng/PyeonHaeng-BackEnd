@@ -8,7 +8,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('PyeonHaeng Server API')
-    .setDescription('The PyeonHaeng API description')
+    .setDescription('The PyeonHaeng Version2 API')
     .setVersion('2.0')
     .addTag('pyeonhaeng')
     .build();
