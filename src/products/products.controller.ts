@@ -29,6 +29,21 @@ export class ProductsController {
     return { count };
   }
 
+  @Get('search')
+  async searchProducts(
+    @Query('product_name') productName: string,
+    @Query('date') date: string,
+    @Query('offset') offset = 1,
+    @Query('limit') limit = 10,
+  ): Promise<Paginated<any>> {
+    return this.productsService.searchProducts(
+      productName,
+      date,
+      offset,
+      limit,
+    );
+  }
+
   @Get(':id')
   async getProductById(@Param('id') id: number): Promise<any> {
     const product = await this.productsService.getProductById(id);

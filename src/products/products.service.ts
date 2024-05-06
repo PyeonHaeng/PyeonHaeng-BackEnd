@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { Between, Repository } from 'typeorm';
+import { Between, Like, Repository } from 'typeorm';
 import { GetProductsDto } from './dto/get-product.dto';
 import { Paginated } from 'src/common/pagination/pagination';
 import type { Promotion } from './enums/promotion.enum';
@@ -119,5 +119,50 @@ export class ProductsService {
       .getCount();
     console.log(count);
     return count;
+  }
+
+  async searchProducts(
+    productName: string,
+    date: string,
+    offset: number,
+    limit: number,
+  ): Promise<Paginated<any>> {
+    const eventDate = new Date(date);
+    const startDate = new Date(
+      eventDate.getFullYear(),
+      eventDate.getMonth(),
+      1,
+    );
+
+    const endDate = new Date(
+      eventDate.getFullYear(),
+      eventDate.getMonth() + 1,
+      0,
+    );
+
+    const [products, count] = await this.productsRepository.findAndCount({
+      where: {
+        name: Like(`%${productName}%`),
+        eventDate: Between(startDate, endDate),
+      },
+      skip: (offset - 1) * limit,
+      take: limit,
+    });
+
+    const results = products.map((product) => ({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      promotion: product.promotion,
+      store: product.store,
+      eventDate: product.eventDate,
+      imageUrl: product.mainProduct?.imageUrl || null,
+    }));
+
+    return {
+      count,
+      hasMore: offset * limit < count,
+      results,
+    };
   }
 }
