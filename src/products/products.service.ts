@@ -68,7 +68,7 @@ export class ProductsService {
     return {
       count: totalCount,
       hasMore,
-      results: results,
+      results,
     };
   }
 
