@@ -4,8 +4,6 @@ import { Product } from './entities/product.entity';
 import { Between, Like, Repository } from 'typeorm';
 import { GetProductsDto } from './dto/get-product.dto';
 import { Paginated } from 'src/common/pagination/pagination';
-import type { Promotion } from './enums/promotion.enum';
-import type { Store } from './enums/store.enum';
 
 @Injectable()
 export class ProductsService {
