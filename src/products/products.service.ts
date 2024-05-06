@@ -115,14 +115,20 @@ export class ProductsService {
       0,
     );
 
-    const [products, count] = await this.productsRepository.findAndCount({
-      where: {
-        name: Like(`%${productName}%`),
-        eventDate: Between(startDate, endDate),
-      },
-      skip: (offset - 1) * limit,
-      take: limit,
-    });
+    const queryBuilder = this.productsRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.mainProduct', 'mainProduct')
+      .where('product.name LIKE :productName', {
+        productName: `%${productName}%`,
+      })
+      .andWhere('product.eventDate BETWEEN :startDate AND :endDate', {
+        startDate,
+        endDate,
+      })
+      .skip((offset - 1) * limit)
+      .take(limit);
+
+    const [products, count] = await queryBuilder.getManyAndCount();
 
     const results = products.map((product) => ({
       id: product.id,
@@ -153,10 +159,13 @@ export class ProductsService {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
 
-    const results = await this.productsRepository.find({
-      where: { name: product.name, store: product.store },
-      order: { eventDate: 'DESC' },
-    });
+    const results = await this.productsRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.mainProduct', 'mainProduct')
+      .where('product.name = :name', { name: product.name })
+      .andWhere('product.store = :store', { store: product.store })
+      .orderBy('product.eventDate', 'DESC')
+      .getMany();
 
     return results.map((product) => ({
       id: product.id,
