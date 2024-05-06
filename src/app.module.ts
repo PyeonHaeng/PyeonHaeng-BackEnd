@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { ProductModule } from './products/products.module';
 import { NoticesModule } from './notices/notices.module';
 import { ConfigModule } from '@nestjs/config';
+import { CreditsModule } from './credits/credits.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     ProductModule,
     NoticesModule,
+    CreditsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
