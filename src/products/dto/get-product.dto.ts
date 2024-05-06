@@ -42,7 +42,7 @@ export class GetProductsDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsEnum(SortOrder)
-  sort?: SortOrder;
+  order?: SortOrder;
 
   @ApiProperty({ required: false })
   @IsOptional()

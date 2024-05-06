@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notice } from './entities/notice.entity';
@@ -12,6 +12,14 @@ export class NoticesService {
   ) {}
 
   async getNotices(offset: number, limit: number): Promise<Paginated<Notice>> {
+    if (offset <= 0) {
+      throw new BadRequestException('Offset must be greater than 0');
+    }
+
+    if (limit <= 0) {
+      throw new BadRequestException('Limit must be greater than 0');
+    }
+
     const [results, count] = await this.noticesRepository.findAndCount({
       skip: (offset - 1) * limit,
       take: limit,

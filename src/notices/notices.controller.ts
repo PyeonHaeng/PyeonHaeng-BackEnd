@@ -9,13 +9,13 @@ export class NoticesController {
 
   @Get()
   async getNotices(
-    @Query('offset') offset = 1,
-    @Query('limit') limit = 10,
+    @Query('offset', { transform: (value) => parseInt(value, 10) }) offset = 1,
+    @Query('limit', { transform: (value) => parseInt(value, 10) }) limit = 10,
   ): Promise<Paginated<Notice>> {
     return this.noticesService.getNotices(offset, limit);
   }
 
-  @Get(':id')
+  @Get(':id(\\d+)')
   async getNoticeById(@Param('id') id: number): Promise<Notice> {
     return this.noticesService.getNoticeById(id);
   }

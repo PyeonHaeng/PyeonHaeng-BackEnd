@@ -17,13 +17,15 @@ export class ProductsService {
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.mainProduct', 'mainProduct');
 
-    if (options.sort) {
-      queryBuilder.orderBy('product.price', options.sort);
+    if (options.order && options.order !== 'NORMAL') {
+      queryBuilder.orderBy('product.price', options.order);
     }
 
-    queryBuilder.andWhere('product.promotion = :promotion', {
-      promotion: options.promotion,
-    });
+    if (options.promotion !== 'ALL') {
+      queryBuilder.andWhere('product.promotion = :promotion', {
+        promotion: options.promotion,
+      });
+    }
 
     queryBuilder.andWhere('product.store = :store', { store: options.store });
 
