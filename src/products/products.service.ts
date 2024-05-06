@@ -141,4 +141,32 @@ export class ProductsService {
       results,
     };
   }
+
+  async getPriceHistory(id: number): Promise<any[]> {
+    const product = await this.productsRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+
+    const results = await this.productsRepository.find({
+      where: { name: product.name, store: product.store },
+      order: { eventDate: 'DESC' },
+    });
+
+    return results.map((product) => ({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      promotion: product.promotion,
+      store: product.store,
+      eventDate:
+        new Date(product.eventDate).toISOString().split('.').shift() + 'Z',
+      imageUrl: product.mainProduct?.imageUrl || null,
+    }));
+  }
 }

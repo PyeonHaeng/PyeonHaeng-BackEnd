@@ -71,4 +71,16 @@ export class ProductsController {
     const product = await this.productsService.getProductById(id);
     return product;
   }
+
+  @ApiOperation({ summary: 'Get price history of a product' })
+  @ApiParam({ name: 'product_id', description: 'Product ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful response',
+    type: PaginatedDto,
+  })
+  @Get(':id(\\d+)/price-history')
+  async getPriceHistory(@Param('id') id: number): Promise<any> {
+    return this.productsService.getPriceHistory(id);
+  }
 }
