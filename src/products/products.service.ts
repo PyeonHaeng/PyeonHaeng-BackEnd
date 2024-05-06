@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Between, Like, Repository } from 'typeorm';
@@ -59,7 +59,8 @@ export class ProductsService {
       price: product.price,
       promotion: product.promotion,
       store: product.store,
-      eventDate: product.eventDate,
+      eventDate:
+        new Date(product.eventDate).toISOString().split('.').shift() + 'Z',
       imageUrl: product.mainProduct?.imageUrl || null,
     }));
 
@@ -78,7 +79,7 @@ export class ProductsService {
       .getOne();
 
     if (!product) {
-      return null;
+      throw new NotFoundException(`Product with ID ${id} not found`);
     }
 
     return {
@@ -87,7 +88,8 @@ export class ProductsService {
       price: product.price,
       promotion: product.promotion,
       store: product.store,
-      eventDate: product.eventDate,
+      eventDate:
+        new Date(product.eventDate).toISOString().split('.').shift() + 'Z',
       imageUrl: product.mainProduct?.imageUrl || null,
     };
   }
@@ -126,7 +128,8 @@ export class ProductsService {
       price: product.price,
       promotion: product.promotion,
       store: product.store,
-      eventDate: product.eventDate,
+      eventDate:
+        new Date(product.eventDate).toISOString().split('.').shift() + 'Z',
       imageUrl: product.mainProduct?.imageUrl || null,
     }));
 

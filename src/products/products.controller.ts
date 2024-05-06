@@ -66,7 +66,7 @@ export class ProductsController {
     description: 'Successful response',
     type: PaginatedDto,
   })
-  @Get(':id')
+  @Get(':id(\\d+)')
   async getProductById(@Param('id') id: number): Promise<any> {
     const product = await this.productsService.getProductById(id);
     return product;

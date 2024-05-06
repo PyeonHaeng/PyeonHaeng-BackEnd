@@ -11,6 +11,14 @@ export class Notice {
   @Column({ type: 'text' })
   content: string;
 
-  @Column({ name: 'created_at' })
+  @Column({
+    name: 'created_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    transformer: {
+      from: (value: Date) => value.toISOString().split('.').shift() + 'Z',
+      to: (value: string) => new Date(value),
+    },
+  })
   createdAt: Date;
 }
