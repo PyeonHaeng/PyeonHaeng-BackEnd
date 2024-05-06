@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductModule } from './products/products.module';
+import { NoticesModule } from './notices/notices.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -19,6 +20,7 @@ import { ConfigModule } from '@nestjs/config';
       synchronize: false,
     }),
     ProductModule,
+    NoticesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
