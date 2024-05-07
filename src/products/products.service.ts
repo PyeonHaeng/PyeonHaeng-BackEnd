@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { Between, Like, Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { GetProductsDto } from './dto/get-product.dto';
 import { Paginated } from 'src/common/pagination/pagination';
 
